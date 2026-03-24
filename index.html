@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Xarxa Neuronal - Formes</title>
+    <style>
+      #pissarra {
+        border: 4px solid black;
+        background-color: #eeeeee;
+        width: 280px;
+        height: 280px;
+        image-rendering: pixelated;
+        cursor: crosshair;
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Dibuixa un cercle, triangle o quadrat:</h2>
+
+    <canvas
+      id="pissarra"
+      width="28"
+      height="28"
+      style="
+        border: 4px solid black;
+        background-color: #eeeeee;
+        width: 280px;
+        height: 280px;
+        image-rendering: pixelated;
+        cursor: crosshair;
+        display: block;
+        margin: 10px 0;
+      "
+    ></canvas>
+    <br />
+
+    <button id="botoPredir">Endevina la forma!</button>
+    <button id="clearBtn">Netejar pissarra</button>
+
+    <h3 id="resultat"></h3>
+
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script type="module" src="index.js"></script>
+  </body>
+</html>
