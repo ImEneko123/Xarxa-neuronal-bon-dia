@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IA Reconeixedora de Formes</title>
-    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #f4f4f9; margin-top: 50px; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            text-align: center; 
+            background-color: #f4f4f9; 
+            margin-top: 50px; 
+        }
         canvas { 
             border: 5px solid #333; 
             background-color: white; 
@@ -29,12 +36,18 @@
         #botoPredir { background-color: #2ecc71; color: white; }
         #clearBtn { background-color: #e74c3c; color: white; }
         button:hover { opacity: 0.8; }
-        #resultat { color: #2c3e50; font-size: 28px; margin-top: 20px; min-height: 40px; }
+        #resultat { 
+            color: blue; 
+            font-size: 28px; 
+            margin-top: 20px; 
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Dibuixa un Cercle, Quadrat o Triangle</h1>
+    <h1>Dibuixa un cercle, triangle o quadrat</h1>
+    
     <canvas id="pissarra" width="280" height="280"></canvas>
     
     <div>
@@ -42,8 +55,9 @@
         <button id="clearBtn">Netejar pissarra</button>
     </div>
 
-    <h3 id="resultat">Fes un dibuix i clica el botó verd</h3>
+    <h3 id="resultat">Dibuixa alguna cosa per començar</h3>
 
     <script src="index.js"></script>
+
 </body>
 </html>
