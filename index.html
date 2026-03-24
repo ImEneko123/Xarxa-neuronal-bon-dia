@@ -1,48 +1,36 @@
 <!DOCTYPE html>
 <html lang="ca">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Xarxa Neuronal - Formes</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Dibuixant</title>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.min.js"></script>
     <style>
-      #pissarra {
-        border: 4px solid black;
-        background-color: #eeeeee;
-        width: 280px;
-        height: 280px;
-        image-rendering: pixelated;
-        cursor: crosshair;
-        display: block;
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
+        body { font-family: sans-serif; text-align: center; background-color: #f0f0f0; }
+        canvas { 
+            border: 4px solid black; 
+            background-color: white; 
+            cursor: crosshair; 
+            display: block; 
+            margin: 20px auto;
+            touch-action: none; /* Perquè funcioni en mòbils */
+        }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 5px; }
+        #resultat { color: blue; font-size: 24px; margin-top: 20px; }
     </style>
-  </head>
-  <body>
-    <h2>Dibuixa un cercle, triangle o quadrat:</h2>
+</head>
+<body>
 
-    <canvas
-      id="pissarra"
-      width="28"
-      height="28"
-      style="
-        border: 4px solid black;
-        background-color: #eeeeee;
-        width: 280px;
-        height: 280px;
-        image-rendering: pixelated;
-        cursor: crosshair;
-        display: block;
-        margin: 10px 0;
-      "
-    ></canvas>
-    <br />
-
+    <h1>Dibuixa un cercle, triangle o quadrat</h1>
+    
+    <canvas id="pissarra" width="280" height="280"></canvas>
+    
+    <br>
     <button id="botoPredir">Endevina la forma!</button>
     <button id="clearBtn">Netejar pissarra</button>
 
-    <h3 id="resultat"></h3>
+    <h3 id="resultat">Dibuixa alguna cosa per començar</h3>
 
-<script src="index.js"></script>
-    <script type="module" src="index.js"></script>
-  </body>
+    <script src="index.js"></script>
+</body>
 </html>
