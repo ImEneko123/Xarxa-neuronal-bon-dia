@@ -1,4 +1,3 @@
-// Esperem que la finestra estigui carregada
 window.onload = function() {
     const canvas = document.getElementById("pissarra");
     const ctx = canvas.getContext("2d");
@@ -7,7 +6,7 @@ window.onload = function() {
     // 1. CONFIGURACIÓ DEL DIBUIX
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.lineWidth = 15; // Gruix per facilitar la feina a la IA
+    ctx.lineWidth = 15; 
     ctx.lineCap = "round";
     ctx.strokeStyle = "black";
 
@@ -15,7 +14,12 @@ window.onload = function() {
 
     canvas.addEventListener("mousedown", (e) => { dibuixant = true; dibuixar(e); });
     canvas.addEventListener("mouseup", () => { dibuixant = false; ctx.beginPath(); });
-    canvas.addEventListener("mousemove", dibuixar);
+    canvas.addEventListener("mousemove", (e) => {
+        if (!dibuixant) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+    });
 
     function dibuixar(e) {
         if (!dibuixant) return;
@@ -31,16 +35,21 @@ window.onload = function() {
         resultatText.innerText = "Pissarra neta";
     };
 
-    // 2. LÒGICA DE LA IA
+    // 2. LÒGICA DE LA IA AMB CONFIGURACIÓ DE MEMÒRIA
     document.getElementById("botoPredir").onclick = async () => {
         resultatText.innerText = "La IA està pensant...";
 
         try {
-            // Carreguem el model (assegura't que el fitxer es digui model.onnx a GitHub)
-            // window.ort és com accedim a la llibreria sense usar 'import'
-            const session = await window.ort.InferenceSession.create('./model.onnx');
+            // CONFIGURACIÓ CRÍTICA: Forcem WASM per evitar l'error de memòria
+            const sessionOptions = {
+                executionProviders: ['wasm'],
+                graphOptimizationLevel: 'all'
+            };
+
+            // Intentem carregar el model
+            const session = await window.ort.InferenceSession.create('./model.onnx', sessionOptions);
             
-            // Creem un canvas petit de 28x28 per processar la imatge
+            // Preprocessament de la imatge (28x28)
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = 28;
             tempCanvas.height = 28;
@@ -51,9 +60,8 @@ window.onload = function() {
             const input = new Float32Array(28 * 28);
             
             for (let i = 0; i < imgData.data.length; i += 4) {
-                // Convertim a grisos i normalitzem (0 a 1)
                 const avg = (imgData.data[i] + imgData.data[i+1] + imgData.data[i+2]) / 3;
-                input[i / 4] = (255 - avg) / 255.0; // Fons blanc esdevé 0, traç negre esdevé 1
+                input[i / 4] = (255 - avg) / 255.0; 
             }
 
             const tensor = new window.ort.Tensor('float32', input, [1, 1, 28, 28]);
@@ -66,8 +74,8 @@ window.onload = function() {
             resultatText.innerText = "Predicció: " + classes[maxIdx];
 
         } catch (e) {
-            console.error(e);
-            resultatText.innerText = "Error: No s'ha pogut carregar el model. Revisa el fitxer .onnx";
+            console.error("Error detallat:", e);
+            resultatText.innerText = "Error: Revisa el fitxer model.onnx";
         }
     };
 };
