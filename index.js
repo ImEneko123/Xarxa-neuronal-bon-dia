@@ -6,7 +6,7 @@ let dibuixant = false;
 
 // Configurar l'estil del llapis
 // Configurar l'estil del llapis
-ctx.lineWidth = 30; // Ho pugem de 12 a 30 perquè la IA ho vegi bé!
+ctx.lineWidth = 15; // Ho pugem de 12 a 15 perquè la IA ho vegi bé!
 ctx.lineCap = 'round';
 ctx.lineCap = 'round';
 ctx.strokeStyle = 'black';
