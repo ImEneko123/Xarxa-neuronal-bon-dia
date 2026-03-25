@@ -5,7 +5,9 @@ const ctx = canvas.getContext('2d');
 let dibuixant = false;
 
 // Configurar l'estil del llapis
-ctx.lineWidth = 12; // Gruixut perquè la IA ho vegi clar
+// Configurar l'estil del llapis
+ctx.lineWidth = 30; // Ho pugem de 12 a 30 perquè la IA ho vegi bé!
+ctx.lineCap = 'round';
 ctx.lineCap = 'round';
 ctx.strokeStyle = 'black';
 
