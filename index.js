@@ -4,14 +4,16 @@ const ctx = canvas.getContext('2d');
 
 let dibuixant = false;
 
-// Configurar l'estil del llapis
-// Configurar l'estil del llapis
-ctx.lineWidth = 15; // Ho pugem de 12 a 15 perquè la IA ho vegi bé!
-ctx.lineCap = 'round';
+// Configurar l'estil del llapis (Gruix 15, perfecte per dibuixar)
+ctx.lineWidth = 15; 
 ctx.lineCap = 'round';
 ctx.strokeStyle = 'black';
 
-// Escoltar el ratolí
+// OMPLIM EL FONS DE BLANC (Així la IA no es confon amb el fons transparent)
+ctx.fillStyle = 'white';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// Escoltar el ratolí per poder dibuixar
 canvas.addEventListener('mousedown', (e) => {
     dibuixant = true;
     ctx.beginPath();
@@ -33,18 +35,15 @@ canvas.addEventListener('mouseleave', () => {
     dibuixant = false;
 });
 
-// Funció per netejar la pissarra i pintar-la de blanc real!
+// Funció per netejar la pissarra i tornar-la a pintar de blanc
 function netejarPissarra() {
-    ctx.fillStyle = 'white'; // Triem color blanc
-    ctx.fillRect(0, 0, canvas.width, canvas.height); // Pintem tot el fons
+    ctx.fillStyle = 'white'; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     const textResultat = document.getElementById('resultat');
     textResultat.innerText = 'Dibuixa alguna cosa per començar';
     textResultat.style.color = 'blue';
 }
-
-// Cridem la funció just a l'inici perquè el llenç no comenci transparent
-netejarPissarra();
 
 // --- 2. INTEL·LIGÈNCIA ARTIFICIAL (ONNX) ---
 async function predir() {
@@ -53,10 +52,10 @@ async function predir() {
     textResultat.style.color = 'blue';
 
     try {
-        // Carreguem el fitxer bo de la IA
+        // Carreguem el fitxer de la IA
         const session = await ort.InferenceSession.create('./model_definitiu.onnx');
 
-        // Creem un canvas petit amagat de 28x28 per donar-li la mida correcta a la IA
+        // Creem un canvas petit amagat de 28x28
         const canvasPetit = document.createElement('canvas');
         canvasPetit.width = 28;
         canvasPetit.height = 28;
@@ -67,44 +66,24 @@ async function predir() {
         const imageData = ctxPetit.getImageData(0, 0, 28, 28);
         const data = imageData.data;
         
-        // Convertim els píxels en zeros i uns
-        const inputData = new Float32Array(28 * 28);
-       // Convertim els píxels (Només necessitem l'Alpha per invertir fons i tinta!)
-        const inputData = new Float32Array(28 * 28);
-       // Convertim els píxels en zeros i uns (Inversió perfecta)
+        // Convertim els píxels a l'idioma de la IA
         const inputData = new Float32Array(28 * 28);
         for (let i = 0; i < 28 * 28; i++) {
-            // Com que el dibuix és en blanc i negre, agafant un sol canal (el vermell, 'r') en tenim prou
-            const r = data[i * 4]; 
+            const r = data[i * 4]; // Agafem el color del píxel
             
-            // Fórmula màgica: inverteix el color. 
-            // El fons blanc (255) es converteix en 0.0 (Negre per a la IA)
-            // El llapis negre (0) es converteix en 1.0 (Llum blanca per a la IA)
+            // FÓRMULA MÀGICA: Converteix fons blanc en 0.0 i traç negre en 1.0
             inputData[i] = 1.0 - (r / 255.0); 
         }
-            
-            // Això converteix directament el traç negre en "llum blanca" per a la IA (valors del 0.0 al 1.0)
-            inputData[i] = alpha / 255.0; 
-        }
-            // Invertim els colors (la IA llegeix blanc sobre negre)
-            if (alpha > 0 && (r < 100 && g < 100 && b < 100)) {
-                inputData[i] = 1.0; 
-            } else {
-                inputData[i] = 0.0;
-            }
-        }
 
-        // Crear el tensor amb les dades
+        // Crear el tensor i executar la xarxa
         const tensor = new ort.Tensor('float32', inputData, [1, 1, 28, 28]);
-
-        // Executar la xarxa neuronal
         const feeds = { input: tensor };
         const results = await session.run(feeds);
 
         // Agafar els resultats
         const output = results.output.data;
         
-        // Buscar la puntuació més alta
+        // Buscar quina és l'opció guanyadora
         let maxIndex = 0;
         let maxValue = output[0];
         for (let i = 1; i < output.length; i++) {
@@ -114,19 +93,4 @@ async function predir() {
             }
         }
 
-        // Llista de formes (Ajusta l'ordre si la teva IA els té diferent a Python!)
-        const formes = ['Cercle 🟢', 'Quadrat 🟦', 'Triangle 🔺'];
-        textResultat.innerText = 'És un ' + formes[maxIndex] + '!';
-        textResultat.style.color = 'green';
-
-    } catch (error) {
-        console.error("Error de la IA:", error);
-        textResultat.innerText = "S'ha produït un error a l'executar el model.";
-        textResultat.style.color = 'red';
-    }
-}
-
-// --- 3. CONNECTAR ELS BOTONS ---
-// Ara els busquem pel seu "id" en lloc d'un nom estrany, així no falla mai!
-document.getElementById('btn-predir').addEventListener('click', predir);
-document.getElementById('btn-netejar').addEventListener('click', netejarPissarra);
+        // Llista de formes (Ajusta l'ordre si a Python ho tenies diferent!)
