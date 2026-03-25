@@ -64,12 +64,14 @@ async function predir() {
         
         // Convertim els píxels en zeros i uns
         const inputData = new Float32Array(28 * 28);
+       // Convertim els píxels (Només necessitem l'Alpha per invertir fons i tinta!)
+        const inputData = new Float32Array(28 * 28);
         for (let i = 0; i < 28 * 28; i++) {
-            const r = data[i * 4];
-            const g = data[i * 4 + 1];
-            const b = data[i * 4 + 2];
-            const alpha = data[i * 4 + 3];
-
+            const alpha = data[i * 4 + 3]; // Agafem només la transparència
+            
+            // Això converteix directament el traç negre en "llum blanca" per a la IA (valors del 0.0 al 1.0)
+            inputData[i] = alpha / 255.0; 
+        }
             // Invertim els colors (la IA llegeix blanc sobre negre)
             if (alpha > 0 && (r < 100 && g < 100 && b < 100)) {
                 inputData[i] = 1.0; 
