@@ -4,11 +4,11 @@ const ctx = canvas.getContext('2d');
 
 let dibuixant = false;
 
-// Configurar l'estil del llapis (Gruix 25, perfecte per dibuixar)
-ctx.lineWidth = 25; 
-ctx.lineCap = 'round';
+// Configurar l'estil del llapis
+ctx.lineWidth = 25; // (o el gruix que hagis decidit al final)
+ctx.lineCap = 'round';  // Això arrodoneix les puntes
+ctx.lineJoin = 'round'; // <--- LA NOVA LÍNIA: Arrodoneix les unions (adéu pinxos!)
 ctx.strokeStyle = 'black';
-
 // OMPLIM EL FONS DE BLANC (Així la IA no es confon amb el fons transparent)
 ctx.fillStyle = 'white';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
