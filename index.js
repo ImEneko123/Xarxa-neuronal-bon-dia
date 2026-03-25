@@ -93,4 +93,18 @@ async function predir() {
             }
         }
 
-        // Llista de formes (Ajusta l'ordre si a Python ho tenies diferent!)
+        // Llista de formes
+        const formes = ['Cercle 🟢', 'Quadrat 🟦', 'Triangle 🔺'];
+        textResultat.innerText = 'És un ' + formes[maxIndex] + '!';
+        textResultat.style.color = 'green';
+
+    } catch (error) {
+        console.error("Error de la IA:", error);
+        textResultat.innerText = "S'ha produït un error a l'executar el model.";
+        textResultat.style.color = 'red';
+    }
+}
+
+// --- 3. CONNECTAR ELS BOTONS ---
+document.getElementById('btn-predir').addEventListener('click', predir);
+document.getElementById('btn-netejar').addEventListener('click', netejarPissarra);
