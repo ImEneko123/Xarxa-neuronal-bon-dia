@@ -4,8 +4,8 @@ const ctx = canvas.getContext('2d');
 
 let dibuixant = false;
 
-// Configurar l'estil del llapis (Gruix 15, perfecte per dibuixar)
-ctx.lineWidth = 15; 
+// Configurar l'estil del llapis (Gruix 25, perfecte per dibuixar)
+ctx.lineWidth = 25; 
 ctx.lineCap = 'round';
 ctx.strokeStyle = 'black';
 
