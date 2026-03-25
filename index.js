@@ -33,13 +33,18 @@ canvas.addEventListener('mouseleave', () => {
     dibuixant = false;
 });
 
-// Funció per netejar la pissarra
+// Funció per netejar la pissarra i pintar-la de blanc real!
 function netejarPissarra() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white'; // Triem color blanc
+    ctx.fillRect(0, 0, canvas.width, canvas.height); // Pintem tot el fons
+    
     const textResultat = document.getElementById('resultat');
     textResultat.innerText = 'Dibuixa alguna cosa per començar';
     textResultat.style.color = 'blue';
 }
+
+// Cridem la funció just a l'inici perquè el llenç no comenci transparent
+netejarPissarra();
 
 // --- 2. INTEL·LIGÈNCIA ARTIFICIAL (ONNX) ---
 async function predir() {
@@ -66,8 +71,17 @@ async function predir() {
         const inputData = new Float32Array(28 * 28);
        // Convertim els píxels (Només necessitem l'Alpha per invertir fons i tinta!)
         const inputData = new Float32Array(28 * 28);
+       // Convertim els píxels en zeros i uns (Inversió perfecta)
+        const inputData = new Float32Array(28 * 28);
         for (let i = 0; i < 28 * 28; i++) {
-            const alpha = data[i * 4 + 3]; // Agafem només la transparència
+            // Com que el dibuix és en blanc i negre, agafant un sol canal (el vermell, 'r') en tenim prou
+            const r = data[i * 4]; 
+            
+            // Fórmula màgica: inverteix el color. 
+            // El fons blanc (255) es converteix en 0.0 (Negre per a la IA)
+            // El llapis negre (0) es converteix en 1.0 (Llum blanca per a la IA)
+            inputData[i] = 1.0 - (r / 255.0); 
+        }
             
             // Això converteix directament el traç negre en "llum blanca" per a la IA (valors del 0.0 al 1.0)
             inputData[i] = alpha / 255.0; 
